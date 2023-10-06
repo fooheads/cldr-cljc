@@ -1,14 +1,21 @@
 (ns fooheads.cldr.core
-  (:refer-clojure :rename {format core-format
-                           get-in core-get-in})
+  (:refer-clojure :exclude [get-in])
   (:require
+    [clojure.core :as clojure]
     [clojure.pprint]))
 
 
 (defonce ^:private cldr-db (atom nil))
 
-(defn set-db! [data] (reset! cldr-db data))
-(defn db [] @cldr-db)
+
+(defn set-db!
+  [data]
+  (reset! cldr-db data))
+
+
+(defn db
+  []
+  @cldr-db)
 
 
 (defn get-in
@@ -18,7 +25,7 @@
   (reduce
     (fn [_ locale]
       (let [path (replace {:locale locale} path)]
-        (when-let [v (core-get-in (db) path)]
+        (when-let [v (clojure/get-in (db) path)]
           (reduced v))))
     nil
     accept-locales))
